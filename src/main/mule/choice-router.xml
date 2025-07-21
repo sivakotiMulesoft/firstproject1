@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="692652d9-27d2-40b8-9814-897610c6ba85" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="choice-routerFlow" doc:id="1273e872-bcc9-4832-94f8-bee61c31828d" >
+		<http:listener doc:name="Listener" doc:id="05284dd2-6c33-492f-b1af-41c75e304dc6" config-ref="HTTP_Listener_config" path="/choice"/>
+		<logger level="INFO" doc:name="Logger" doc:id="b1fdb020-a58f-4c6d-b27a-0bdb550de600" message="#[payload]"/>
+		<set-variable value="#[attributes.queryParams.country]" doc:name="Set Variable" doc:id="6f6b7cd0-357d-4040-bdc9-cdd0e0f0a764" variableName="city"/>
+		<choice doc:name="Choice" doc:id="6f0d97c1-cab6-463b-b73e-74142253db93" >
+			<when expression='#[vars.city == "India"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="29545f12-bcd5-4db7-b413-c85f325c6ce1" />
+				<logger level="INFO" doc:name="Logger" doc:id="d1c2c2af-d6e6-494b-a979-d1daada315c7" message='"india data process"'/>
+			</when>
+			<when expression='#[vars.city == "Ger"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="a97ecd59-2b00-4f36-b360-01be14aa8318" />
+				<logger level="INFO" doc:name="Logger" doc:id="179e3bc2-5d91-444e-87ca-6517e2a43733" message='"Ger data process"'/>
+			</when>
+			<when expression='vars.city == "US"'>
+				<logger level="INFO" doc:name="Logger" doc:id="e9dce564-0d0d-4955-ab62-8666a4c1e097" />
+				<logger level="INFO" doc:name="Logger" doc:id="8460f35b-4e22-4293-b4ee-0b4937f7152b" message='"US data process"'/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="bd44a286-6ec3-4268-ad25-072b5bec98a8" message='"Nothing realted req"'/>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="636c008b-5c1f-4059-904c-0e6b8093c05d" message='"finally process"'/>
+	</flow>
+</mule>
